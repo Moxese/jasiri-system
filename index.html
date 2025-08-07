@@ -40,151 +40,6 @@
             background-size: 100px 100px;
         }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 2rem;
-            background: linear-gradient(to bottom, rgba(10, 25, 47, 1) 0%, rgba(10, 25, 47, 0.9) 100%);
-            border-bottom: 1px solid rgba(100, 255, 218, 0.2);
-            z-index: 100;
-            position: relative;
-        }
-
-        .header-title {
-            font-size: 1.8rem;
-            margin: 0;
-            font-weight: 600;
-            letter-spacing: 1px;
-            color: var(--light-blue);
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--highlight);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        .user-name {
-            font-size: 0.9rem;
-            color: var(--text-light);
-        }
-
-        .profile-dropdown {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: var(--navy);
-            border-radius: 8px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            padding: 1rem;
-            width: 250px;
-            z-index: 200;
-            display: none;
-            border: 1px solid rgba(100, 255, 218, 0.2);
-        }
-
-        .profile-dropdown.show {
-            display: block;
-        }
-
-        .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
-        }
-
-        .profile-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background-color: var(--highlight);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .profile-info h3 {
-            margin: 0;
-            color: var(--light-blue);
-        }
-
-        .profile-info p {
-            margin: 0.25rem 0 0;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        .profile-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.5rem;
-            margin: 1rem 0;
-        }
-
-        .profile-stat {
-            text-align: center;
-        }
-
-        .profile-stat-value {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--light-blue);
-        }
-
-        .profile-stat-label {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        .profile-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            border-top: 1px solid rgba(100, 255, 218, 0.1);
-            padding-top: 0.5rem;
-        }
-
-        .profile-menu-item {
-            padding: 0.75rem 0;
-        }
-
-        .profile-menu-link {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            color: var(--text-light);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .profile-menu-link:hover {
-            color: var(--light-blue);
-        }
-
-        .profile-menu-link i {
-            width: 20px;
-            text-align: center;
-        }
-
         .container {
             display: grid;
             grid-template-columns: 250px 1fr;
@@ -638,6 +493,140 @@
             display: block;
         }
 
+        /* Navigation bar styles */
+        .top-nav {
+            background-color: #0a192f;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+            z-index: 1000;
+            position: relative;
+        }
+
+        .nav-brand {
+            color: #64ffda;
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #e6f1ff;
+            text-decoration: none;
+            padding: 1.5rem 0;
+            font-size: 1rem;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #64ffda;
+        }
+
+        .nav-links a.active {
+            color: #64ffda;
+        }
+
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #64ffda;
+        }
+
+        /* My Space dropdown styles */
+        .my-space-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .my-space-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: var(--navy);
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            width: 250px;
+            z-index: 200;
+            border: 1px solid rgba(100, 255, 218, 0.2);
+        }
+
+        .my-space-dropdown:hover .my-space-content {
+            display: block;
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--highlight);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-info h3 {
+            margin: 0;
+            color: var(--light-blue);
+            font-size: 1rem;
+        }
+
+        .profile-info p {
+            margin: 0.25rem 0 0;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .profile-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            border-top: 1px solid rgba(100, 255, 218, 0.1);
+            padding-top: 0.5rem;
+        }
+
+        .profile-menu-item {
+            padding: 0.75rem 0;
+        }
+
+        .profile-menu-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .profile-menu-link:hover {
+            color: var(--light-blue);
+        }
+
+        .profile-menu-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Responsive adjustments */
         @media (max-width: 992px) {
             .container {
                 grid-template-columns: 1fr;
@@ -658,13 +647,36 @@
             }
         }
 
-        @media (max-width: 576px) {
-            .header {
+        @media (max-width: 768px) {
+            .top-nav {
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
+                padding: 1rem;
             }
             
+            .nav-links {
+                width: 100%;
+                justify-content: space-around;
+                margin-top: 1rem;
+            }
+            
+            .nav-links a {
+                padding: 0.5rem 0;
+            }
+
+            .my-space-dropdown {
+                position: static;
+            }
+
+            .my-space-content {
+                position: relative;
+                width: 100%;
+                box-shadow: none;
+                border: none;
+                border-top: 1px solid rgba(100, 255, 218, 0.2);
+            }
+        }
+
+        @media (max-width: 576px) {
             .task-header {
                 flex-direction: column;
                 align-items: flex-start;
@@ -684,11 +696,6 @@
                 grid-template-columns: 1fr;
             }
 
-            .profile-dropdown {
-                width: 100%;
-                right: -20px;
-            }
-
             .workspace-modal {
                 padding: 1rem;
             }
@@ -706,143 +713,67 @@
 </head>
 <body>
     <nav class="top-nav">
-  <div class="nav-brand">KazInni</div>
-  <div class="nav-links">
-    <a href="#start">Start</a>
-    <a href="#projects">Projects</a>
-    <a href="#my-space" class="active">My Space</a>
-  </div>
-</nav>
-
-<style>
-  /* Navigation bar styles */
-  .top-nav {
-    background-color: #0a192f; /* Matching your dark blue */
-    padding: 0 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(100, 255, 218, 0.2); /* Matching your accent */
-    z-index: 1000;
-    position: relative;
-  }
-
-  .nav-brand {
-    color: #64ffda; /* Your light blue accent */
-    font-size: 1.8rem;
-    font-weight: 600;
-    letter-spacing: 1px;
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 1.5rem;
-  }
-
-  .nav-links a {
-    color: #e6f1ff; /* Your light text color */
-    text-decoration: none;
-    padding: 1.5rem 0;
-    font-size: 1rem;
-    font-weight: 500;
-    position: relative;
-    transition: color 0.3s ease;
-  }
-
-  .nav-links a:hover {
-    color: #64ffda; /* Light blue accent on hover */
-  }
-
-  .nav-links a.active {
-    color: #64ffda;
-  }
-
-  .nav-links a.active::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background-color: #64ffda;
-  }
-
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .top-nav {
-      flex-direction: column;
-      padding: 1rem;
-    }
-    
-    .nav-links {
-      width: 100%;
-      justify-content: space-around;
-      margin-top: 1rem;
-    }
-    
-    .nav-links a {
-      padding: 0.5rem 0;
-    }
-  }
-</style>
-    <div class="bg-pattern"></div>
-    <div class="notification" id="notification"></div>
-
-    <header class="header">
-        <h1 class="header-title"></h1>
-        <div class="user-profile" id="userProfile">
-            <div class="user-avatar" id="userAvatar">MM</div>
-            <div class="user-name" id="userName">Loading...</div>
-            <div class="profile-dropdown" id="profileDropdown">
-                <div class="profile-header">
-                    <div class="profile-avatar" id="profileAvatar">MM</div>
-                    <div class="profile-info">
-                        <h3 id="profileName">Moses Mugera</h3>
-                        <p id="profileEmail">moses@example.com</p>
-                        <p id="profileSkills">Data Entry, Spreadsheets</p>
+        <div class="nav-brand">KazInni</div>
+        <div class="nav-links">
+            <a href="#start">Start</a>
+            <a href="#projects">Projects</a>
+            <div class="my-space-dropdown">
+                <a href="#my-space" class="active">
+                    <div class="profile-avatar" id="profileAvatarNav">MM</div>
+                </a>
+                <div class="my-space-content">
+                    <div class="profile-header" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <div class="profile-avatar" id="profileAvatarNavLarge">MM</div>
+                        <div class="profile-info">
+                            <h3 id="profileNameNav">Moses Mugera</h3>
+                            <p id="profileEmailNav">moses@example.com</p>
+                        </div>
                     </div>
+                    <ul class="profile-menu">
+                        <li class="profile-menu-item">
+                            <a href="#" class="profile-menu-link" onclick="showSection('tasks-section')">
+                                <i class="fas fa-tasks"></i>
+                                <span>My Tasks</span>
+                            </a>
+                        </li>
+                        <li class="profile-menu-item">
+                            <a href="#" class="profile-menu-link" onclick="showSection('completed-section')">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Completed</span>
+                            </a>
+                        </li>
+                        <li class="profile-menu-item">
+                            <a href="#" class="profile-menu-link" onclick="showSection('performance-section')">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Performance</span>
+                            </a>
+                        </li>
+                        <li class="profile-menu-item">
+                            <a href="#" class="profile-menu-link" onclick="showSection('documents-section')">
+                                <i class="fas fa-file-alt"></i>
+                                <span>Documents</span>
+                            </a>
+                        </li>
+                        <li class="profile-menu-item">
+                            <a href="#" class="profile-menu-link" onclick="showSection('settings-section')">
+                                <i class="fas fa-cog"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
+                        <li class="profile-menu-item">
+                            <a href="#" class="profile-menu-link">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
-                <div class="profile-stats">
-                    <div class="profile-stat">
-                        <div class="profile-stat-value" id="profileCompleted">5</div>
-                        <div class="profile-stat-label">Completed</div>
-                    </div>
-                    <div class="profile-stat">
-                        <div class="profile-stat-value" id="profileEarnings">KSh 124,000</div>
-                        <div class="profile-stat-label">Earned</div>
-                    </div>
-                    <div class="profile-stat">
-                        <div class="profile-stat-value" id="profileRating">4.8</div>
-                        <div class="profile-stat-label">Rating</div>
-                    </div>
-                    <div class="profile-stat">
-                        <div class="profile-stat-value" id="profileActive">3</div>
-                        <div class="profile-stat-label">Active</div>
-                    </div>
-                </div>
-                <ul class="profile-menu">
-                    <li class="profile-menu-item">
-                        <a href="#" class="profile-menu-link">
-                            <i class="fas fa-user"></i>
-                            <span>My Profile</span>
-                        </a>
-                    </li>
-                    <li class="profile-menu-item">
-                        <a href="#" class="profile-menu-link">
-                            <i class="fas fa-cog"></i>
-                            <span>Settings</span>
-                        </a>
-                    </li>
-                    <li class="profile-menu-item">
-                        <a href="#" class="profile-menu-link">
-                            <i class="fas fa-sign-out-alt"></i>
-                            <span>Logout</span>
-                        </a>
-                    </li>
-                </ul>
             </div>
         </div>
-    </header>
+    </nav>
+
+    <div class="bg-pattern"></div>
+    <div class="notification" id="notification"></div>
 
     <div class="container">
         <div class="sidebar">
@@ -1049,7 +980,6 @@
         let assignedTasks = [];
         let inProgressTasks = [];
         let completedTasks = [];
-        let isProfileOpen = false;
         let currentTask = null;
         
         // Configuration
@@ -1074,18 +1004,7 @@
         };
         
         // DOM elements
-        const userProfileElement = document.getElementById('userProfile');
-        const userAvatarElement = document.getElementById('userAvatar');
-        const userNameElement = document.getElementById('userName');
-        const profileDropdown = document.getElementById('profileDropdown');
-        const profileAvatar = document.getElementById('profileAvatar');
-        const profileName = document.getElementById('profileName');
-        const profileEmail = document.getElementById('profileEmail');
-        const profileSkills = document.getElementById('profileSkills');
-        const profileCompleted = document.getElementById('profileCompleted');
-        const profileEarnings = document.getElementById('profileEarnings');
-        const profileRating = document.getElementById('profileRating');
-        const profileActive = document.getElementById('profileActive');
+        const notificationElement = document.getElementById('notification');
         const activeTasksBadge = document.getElementById('activeTasksBadge');
         const taskStatsElement = document.getElementById('taskStats');
         const assignedTasksContainer = document.getElementById('assignedTasksContainer');
@@ -1098,9 +1017,12 @@
         const workspaceTitleElement = document.getElementById('workspaceTitle');
         const workspaceFrameElement = document.getElementById('workspaceFrame');
         const workspaceToolbar = document.getElementById('workspaceToolbar');
-        const notificationElement = document.getElementById('notification');
         const menuLinks = document.querySelectorAll('.menu-link');
         const taskTabs = document.querySelectorAll('.task-tab');
+        const profileAvatarNav = document.getElementById('profileAvatarNav');
+        const profileAvatarNavLarge = document.getElementById('profileAvatarNavLarge');
+        const profileNameNav = document.getElementById('profileNameNav');
+        const profileEmailNav = document.getElementById('profileEmailNav');
         
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
@@ -1116,21 +1038,6 @@
         
         // Set up event listeners
         function setupEventListeners() {
-            // Toggle profile dropdown
-            userProfileElement.addEventListener('click', function(e) {
-                e.stopPropagation();
-                isProfileOpen = !isProfileOpen;
-                profileDropdown.classList.toggle('show', isProfileOpen);
-            });
-            
-            // Close dropdown when clicking outside
-            document.addEventListener('click', function() {
-                if (isProfileOpen) {
-                    isProfileOpen = false;
-                    profileDropdown.classList.remove('show');
-                }
-            });
-            
             // Close workspace
             document.getElementById('closeWorkspace').addEventListener('click', closeWorkspace);
             
@@ -1235,7 +1142,6 @@
                 if (data && data.name) {
                     currentFreelancer = data;
                     updateFreelancerUI();
-                    updateProfileUI();
                     showNotification('Profile data loaded');
                 } else {
                     throw new Error('Invalid data format');
@@ -1254,17 +1160,18 @@
                     activeTasks: 3
                 };
                 updateFreelancerUI();
-                updateProfileUI();
             }
         }
         
-        // Update freelancer UI in header
+        // Update freelancer UI in navigation
         function updateFreelancerUI() {
             if (!currentFreelancer) return;
             
             const initials = currentFreelancer.name.split(' ').map(n => n[0]).join('').toUpperCase();
-            userAvatarElement.textContent = initials;
-            userNameElement.textContent = currentFreelancer.name;
+            profileAvatarNav.textContent = initials;
+            profileAvatarNavLarge.textContent = initials;
+            profileNameNav.textContent = currentFreelancer.name;
+            profileEmailNav.textContent = currentFreelancer.email || 'moses@example.com';
             activeTasksBadge.textContent = `${currentFreelancer.activeTasks || 0} Active Tasks`;
             
             // Format earnings in Kenyan Shillings
@@ -1293,28 +1200,6 @@
                     <div class="stat-label">Avg Rating</div>
                 </div>
             `;
-        }
-        
-        // Update profile dropdown UI
-        function updateProfileUI() {
-            if (!currentFreelancer) return;
-            
-            const initials = currentFreelancer.name.split(' ').map(n => n[0]).join('').toUpperCase();
-            profileAvatar.textContent = initials;
-            profileName.textContent = currentFreelancer.name;
-            profileEmail.textContent = currentFreelancer.email || 'moses@example.com';
-            profileSkills.textContent = currentFreelancer.skills || 'Data Entry, Spreadsheets';
-            profileCompleted.textContent = currentFreelancer.completedTasks || 0;
-            
-            // Format earnings in Kenyan Shillings
-            profileEarnings.textContent = new Intl.NumberFormat('en-KE', {
-                style: 'currency',
-                currency: 'KES',
-                minimumFractionDigits: 0
-            }).format(currentFreelancer.earnings || 0);
-            
-            profileRating.textContent = currentFreelancer.rating || 'N/A';
-            profileActive.textContent = currentFreelancer.activeTasks || 0;
         }
         
         // Load tasks - Updated to filter by assigned user
@@ -1380,7 +1265,7 @@
         }
         
         // Render assigned tasks
-         function renderAssignedTasks() {
+        function renderAssignedTasks() {
             if (!assignedTasks || assignedTasks.length === 0) {
                 assignedTasksContainer.innerHTML = `
                     <div class="empty-state">
@@ -1966,7 +1851,4 @@
     </script>
 </body>
 </html>
-
-
-
 
