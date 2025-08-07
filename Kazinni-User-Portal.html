@@ -1,0 +1,1892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freelance Project Management | Task Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --dark-blue: #0a192f;
+            --navy: #202226;
+            --light-blue: #64ffda;
+            --highlight: #1e90ff;
+            --text-light: #e6f1ff;
+            --text-muted: #8892b0;
+            --form-bg: rgba(17, 34, 64, 0.85);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--dark-blue);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+            background-image: 
+                radial-gradient(circle at 25% 25%, var(--light-blue) 0%, transparent 15%),
+                radial-gradient(circle at 75% 75%, var(--highlight) 0%, transparent 15%);
+            background-size: 100px 100px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            background: linear-gradient(to bottom, rgba(10, 25, 47, 1) 0%, rgba(10, 25, 47, 0.9) 100%);
+            border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+            z-index: 100;
+            position: relative;
+        }
+
+        .header-title {
+            font-size: 1.8rem;
+            margin: 0;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--light-blue);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--highlight);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .user-name {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--navy);
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            width: 250px;
+            z-index: 200;
+            display: none;
+            border: 1px solid rgba(100, 255, 218, 0.2);
+        }
+
+        .profile-dropdown.show {
+            display: block;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+        }
+
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--highlight);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .profile-info h3 {
+            margin: 0;
+            color: var(--light-blue);
+        }
+
+        .profile-info p {
+            margin: 0.25rem 0 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .profile-stat {
+            text-align: center;
+        }
+
+        .profile-stat-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--light-blue);
+        }
+
+        .profile-stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .profile-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            border-top: 1px solid rgba(100, 255, 218, 0.1);
+            padding-top: 0.5rem;
+        }
+
+        .profile-menu-item {
+            padding: 0.75rem 0;
+        }
+
+        .profile-menu-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .profile-menu-link:hover {
+            color: var(--light-blue);
+        }
+
+        .profile-menu-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: calc(100vh - 80px);
+        }
+
+        .sidebar {
+            background: rgba(17, 34, 64, 0.8);
+            border-right: 1px solid rgba(100, 255, 218, 0.1);
+            padding: 2rem 1rem;
+            z-index: 50;
+            position: relative;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-link:hover, .menu-link.active {
+            background: rgba(100, 255, 218, 0.1);
+            color: var(--light-blue);
+        }
+
+        .menu-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            padding: 2rem;
+            position: relative;
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+            min-height: calc(100vh - 200px); /* Prevent white space at bottom */
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .section-title {
+            margin-bottom: 2rem;
+            font-weight: 500;
+            color: var(--light-blue);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .task-card {
+            background: rgba(17, 34, 64, 0.7);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--light-blue);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .task-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .task-title {
+            margin: 0;
+            color: var(--light-blue);
+            font-size: 1.2rem;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .task-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .task-description {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--light-blue), var(--highlight));
+            color: var(--dark-blue);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--light-blue);
+            border: 1px solid var(--light-blue);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(100, 255, 218, 0.1);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-assigned {
+            background: rgba(30, 144, 255, 0.2);
+            color: var(--highlight);
+        }
+
+        .status-in-progress {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .status-completed {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+        }
+
+        .task-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(17, 34, 64, 0.7);
+            border-radius: 8px;
+            padding: 1.2rem;
+            text-align: center;
+            border-bottom: 3px solid var(--light-blue);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--light-blue);
+            margin: 0.5rem 0;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(100, 255, 218, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--light-blue);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--highlight);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem;
+            background: var(--navy);
+            color: var(--light-blue);
+            border-left: 4px solid var(--light-blue);
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        /* Documents Section */
+        .documents-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .document-card {
+            background: rgba(17, 34, 64, 0.7);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--light-blue);
+            transition: all 0.3s ease;
+        }
+
+        .document-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .document-title {
+            margin: 0 0 1rem 0;
+            color: var(--light-blue);
+        }
+
+        .document-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        /* Performance Section */
+        .performance-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: rgba(17, 34, 64, 0.7);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--light-blue);
+        }
+
+        .metric-title {
+            margin: 0 0 1rem 0;
+            color: var(--light-blue);
+            font-size: 1.1rem;
+        }
+
+        /* Settings Section */
+        .settings-form {
+            background: rgba(17, 34, 64, 0.7);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--light-blue);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--light-blue);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(10, 25, 47, 0.5);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            border-radius: 4px;
+            color: var(--text-light);
+            font-family: inherit;
+        }
+
+        /* Workspace Modal */
+        .workspace-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 25, 47, 0.95);
+            z-index: 1000;
+            padding: 2rem;
+            overflow: auto;
+        }
+
+        .workspace-modal.active {
+            display: block;
+        }
+
+        .workspace-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+        }
+
+        .workspace-title {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--light-blue);
+        }
+
+        .workspace-tools {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .tool-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.3s ease;
+            font-size: 1rem;
+            padding: 0.5rem;
+        }
+
+        .tool-btn:hover {
+            color: var(--light-blue);
+        }
+
+        .workspace-content {
+            background: var(--navy);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .workspace-iframe-container {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 4px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .workspace-toolbar {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(100, 255, 218, 0.2);
+        }
+
+        /* Task Status Tabs */
+        .task-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+            margin-bottom: 1.5rem;
+        }
+
+        .task-tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .task-tab.active {
+            color: var(--light-blue);
+            border-bottom-color: var(--light-blue);
+        }
+
+        .task-tab:hover:not(.active) {
+            color: var(--text-light);
+        }
+
+        .task-tab-content {
+            display: none;
+        }
+
+        .task-tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 992px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .task-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: flex-start;
+            }
+
+            .workspace-iframe-container {
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .task-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .task-actions, .document-actions, .workspace-toolbar {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .task-stats, .documents-list, .performance-metrics {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-dropdown {
+                width: 100%;
+                right: -20px;
+            }
+
+            .workspace-modal {
+                padding: 1rem;
+            }
+
+            .workspace-iframe-container {
+                height: 300px;
+            }
+
+            .task-tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    <div class="notification" id="notification"></div>
+
+    <header class="header">
+        <h1 class="header-title">KazInni</h1>
+        <div class="user-profile" id="userProfile">
+            <div class="user-avatar" id="userAvatar">MM</div>
+            <div class="user-name" id="userName">Loading...</div>
+            <div class="profile-dropdown" id="profileDropdown">
+                <div class="profile-header">
+                    <div class="profile-avatar" id="profileAvatar">MM</div>
+                    <div class="profile-info">
+                        <h3 id="profileName">Moses Mugera</h3>
+                        <p id="profileEmail">moses@example.com</p>
+                        <p id="profileSkills">Data Entry, Spreadsheets</p>
+                    </div>
+                </div>
+                <div class="profile-stats">
+                    <div class="profile-stat">
+                        <div class="profile-stat-value" id="profileCompleted">5</div>
+                        <div class="profile-stat-label">Completed</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value" id="profileEarnings">KSh 124,000</div>
+                        <div class="profile-stat-label">Earned</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value" id="profileRating">4.8</div>
+                        <div class="profile-stat-label">Rating</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="profile-stat-value" id="profileActive">3</div>
+                        <div class="profile-stat-label">Active</div>
+                    </div>
+                </div>
+                <ul class="profile-menu">
+                    <li class="profile-menu-item">
+                        <a href="#" class="profile-menu-link">
+                            <i class="fas fa-user"></i>
+                            <span>My Profile</span>
+                        </a>
+                    </li>
+                    <li class="profile-menu-item">
+                        <a href="#" class="profile-menu-link">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                    <li class="profile-menu-item">
+                        <a href="#" class="profile-menu-link">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="menu-item">
+                    <a href="#" class="menu-link active" id="menuTasks" data-section="tasks-section">
+                        <i class="fas fa-tasks"></i>
+                        <span>My Tasks</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link" id="menuCompleted" data-section="completed-section">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Completed</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link" id="menuPerformance" data-section="performance-section">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Performance</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link" id="menuDocuments" data-section="documents-section">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Documents</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link" id="menuSettings" data-section="settings-section">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <!-- Tasks Section -->
+            <div id="tasks-section" class="content-section active">
+                <h2 class="section-title">
+                    <span>My Tasks</span>
+                    <span class="status-badge status-assigned" id="activeTasksBadge">Loading...</span>
+                </h2>
+
+                <div class="task-stats" id="taskStats">
+                    <div class="stat-card">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="task-tabs">
+                    <div class="task-tab active" data-tab="assigned-tasks">Assigned Tasks</div>
+                    <div class="task-tab" data-tab="in-progress-tasks">In Progress</div>
+                    <div class="task-tab" data-tab="recent-completed">Recently Completed</div>
+                </div>
+
+                <div id="assigned-tasks" class="task-tab-content active">
+                    <div id="assignedTasksContainer">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="in-progress-tasks" class="task-tab-content">
+                    <div id="inProgressTasksContainer">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="recent-completed" class="task-tab-content">
+                    <div id="recentCompletedContainer">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completed Tasks Section -->
+            <div id="completed-section" class="content-section">
+                <h2 class="section-title">
+                    <span>Completed Tasks</span>
+                    <span class="status-badge status-completed" id="completedTasksBadge">Loading...</span>
+                </h2>
+                <div id="completedTasksContainer">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Section -->
+            <div id="performance-section" class="content-section">
+                <h2 class="section-title">
+                    <span>Performance Dashboard</span>
+                </h2>
+                <div class="performance-metrics" id="performanceMetrics">
+                    <div class="metric-card">
+                        <h3 class="metric-title">Completion Rate</h3>
+                        <div class="loading">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <h3 class="metric-title">Earnings Overview</h3>
+                        <div class="loading">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <h3 class="metric-title">Task Timeline</h3>
+                        <div class="loading">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <h3 class="metric-title">Client Ratings</h3>
+                        <div class="loading">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documents Section -->
+            <div id="documents-section" class="content-section">
+                <h2 class="section-title">
+                    <span>Project Documents</span>
+                </h2>
+                <div class="documents-list" id="documentsList"></div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settings-section" class="content-section">
+                <h2 class="section-title">
+                    <span>Settings</span>
+                </h2>
+                <div class="settings-form">
+                    <div class="form-group">
+                        <label class="form-label">Notification Preferences</label>
+                        <select class="form-control">
+                            <option>All Notifications</option>
+                            <option>Task Assignments Only</option>
+                            <option>None</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Timezone</label>
+                        <select class="form-control">
+                            <option>Africa/Nairobi (EAT)</option>
+                            <option>UTC</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Theme</label>
+                        <select class="form-control">
+                            <option>Dark (Default)</option>
+                            <option>Light</option>
+                            <option>High Contrast</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary">Save Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Workspace Modal -->
+    <div class="workspace-modal" id="workspaceModal">
+        <div class="workspace-header">
+            <h3 class="workspace-title" id="workspaceTitle">Task Workspace</h3>
+            <div class="workspace-tools">
+                <button class="tool-btn" title="Refresh" id="refreshWorkspace">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="tool-btn" title="Fullscreen" id="fullscreenWorkspace">
+                    <i class="fas fa-expand"></i>
+                </button>
+                <button class="tool-btn" id="closeWorkspace" title="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="workspace-content">
+            <div class="workspace-iframe-container">
+                <iframe id="workspaceFrame" class="workspace-iframe-container" src="about:blank"></iframe>
+            </div>
+            
+            <div class="workspace-toolbar" id="workspaceToolbar"></div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentFreelancer = null;
+        let allTasks = [];
+        let assignedTasks = [];
+        let inProgressTasks = [];
+        let completedTasks = [];
+        let isProfileOpen = false;
+        let currentTask = null;
+        
+        // Configuration
+        const config = {
+            scriptUrl: 'https://script.google.com/macros/s/AKfycbySkfcC7Q2sZWfThsy0az4Az8UMdNfTgU1iOE1oo-fxGtN9Bgy8nXq2ty-baB-WNhVq/exec',
+            freelancerId: 'fl-001',
+            notificationDuration: 3000,
+            defaultDocuments: [
+                {
+                    title: 'Project Guidelines',
+                    url: 'https://docs.google.com/document/d/1abc123example',
+                    type: 'Google Doc',
+                    project: 'General'
+                },
+                {
+                    title: 'Style Guide',
+                    url: 'https://docs.google.com/document/d/1def456example',
+                    type: 'Google Doc',
+                    project: 'General'
+                }
+            ]
+        };
+        
+        // DOM elements
+        const userProfileElement = document.getElementById('userProfile');
+        const userAvatarElement = document.getElementById('userAvatar');
+        const userNameElement = document.getElementById('userName');
+        const profileDropdown = document.getElementById('profileDropdown');
+        const profileAvatar = document.getElementById('profileAvatar');
+        const profileName = document.getElementById('profileName');
+        const profileEmail = document.getElementById('profileEmail');
+        const profileSkills = document.getElementById('profileSkills');
+        const profileCompleted = document.getElementById('profileCompleted');
+        const profileEarnings = document.getElementById('profileEarnings');
+        const profileRating = document.getElementById('profileRating');
+        const profileActive = document.getElementById('profileActive');
+        const activeTasksBadge = document.getElementById('activeTasksBadge');
+        const taskStatsElement = document.getElementById('taskStats');
+        const assignedTasksContainer = document.getElementById('assignedTasksContainer');
+        const inProgressTasksContainer = document.getElementById('inProgressTasksContainer');
+        const recentCompletedContainer = document.getElementById('recentCompletedContainer');
+        const completedTasksContainer = document.getElementById('completedTasksContainer');
+        const performanceMetrics = document.getElementById('performanceMetrics');
+        const documentsList = document.getElementById('documentsList');
+        const workspaceModal = document.getElementById('workspaceModal');
+        const workspaceTitleElement = document.getElementById('workspaceTitle');
+        const workspaceFrameElement = document.getElementById('workspaceFrame');
+        const workspaceToolbar = document.getElementById('workspaceToolbar');
+        const notificationElement = document.getElementById('notification');
+        const menuLinks = document.querySelectorAll('.menu-link');
+        const taskTabs = document.querySelectorAll('.task-tab');
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFreelancerData();
+            loadTasks();
+            setupEventListeners();
+            
+            // Store tasks in localStorage for client-side tracking
+            if (!localStorage.getItem('taskStatus')) {
+                localStorage.setItem('taskStatus', JSON.stringify({}));
+            }
+        });
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            // Toggle profile dropdown
+            userProfileElement.addEventListener('click', function(e) {
+                e.stopPropagation();
+                isProfileOpen = !isProfileOpen;
+                profileDropdown.classList.toggle('show', isProfileOpen);
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function() {
+                if (isProfileOpen) {
+                    isProfileOpen = false;
+                    profileDropdown.classList.remove('show');
+                }
+            });
+            
+            // Close workspace
+            document.getElementById('closeWorkspace').addEventListener('click', closeWorkspace);
+            
+            // Refresh workspace
+            document.getElementById('refreshWorkspace').addEventListener('click', function() {
+                if (workspaceFrameElement.src && workspaceFrameElement.src !== 'about:blank') {
+                    workspaceFrameElement.src = workspaceFrameElement.src;
+                    showNotification('Workspace refreshed');
+                }
+            });
+            
+            // Fullscreen workspace
+            document.getElementById('fullscreenWorkspace').addEventListener('click', toggleFullscreen);
+            
+            // Handle fullscreen change events
+            document.addEventListener('fullscreenchange', updateFullscreenButton);
+            
+            // Menu navigation
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('data-section');
+                    setActiveMenu(this);
+                    showSection(sectionId);
+                });
+            });
+            
+            // Task tabs navigation
+            taskTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    setActiveTaskTab(this, tabId);
+                });
+            });
+        }
+        
+        // Show specific section
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show requested section
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.classList.add('active');
+                
+                // Load section content if needed
+                if (sectionId === 'documents-section' && documentsList.children.length === 0) {
+                    loadDocuments();
+                } else if (sectionId === 'performance-section') {
+                    loadPerformanceMetrics();
+                }
+                
+                // Scroll to top of section
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+        
+        // Set active menu item
+        function setActiveMenu(activeItem) {
+            menuLinks.forEach(item => {
+                item.classList.remove('active');
+            });
+            activeItem.classList.add('active');
+        }
+        
+        // Set active task tab
+        function setActiveTaskTab(activeTab, tabId) {
+            taskTabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            activeTab.classList.add('active');
+            
+            document.querySelectorAll('.task-tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            document.getElementById(tabId).classList.add('active');
+        }
+        
+        // Show notification
+        function showNotification(message) {
+            notificationElement.textContent = message;
+            notificationElement.classList.add('show');
+            
+            setTimeout(() => {
+                notificationElement.classList.remove('show');
+            }, config.notificationDuration);
+        }
+        
+        // Load freelancer data
+        async function loadFreelancerData() {
+            try {
+                const response = await fetch(`${config.scriptUrl}?action=getfreelancerstats&id=${config.freelancerId}`);
+                
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                
+                const data = await response.json();
+                
+                if (data && data.name) {
+                    currentFreelancer = data;
+                    updateFreelancerUI();
+                    updateProfileUI();
+                    showNotification('Profile data loaded');
+                } else {
+                    throw new Error('Invalid data format');
+                }
+            } catch (error) {
+                console.error('Error loading freelancer data:', error);
+                handleApiError(error);
+                // Fallback data
+                currentFreelancer = {
+                    name: 'Moses Mugera',
+                    email: 'moses@example.com',
+                    skills: 'Data Entry, Spreadsheets, Research',
+                    completedTasks: 5,
+                    earnings: 124000, // KSh amount
+                    rating: 4.8,
+                    activeTasks: 3
+                };
+                updateFreelancerUI();
+                updateProfileUI();
+            }
+        }
+        
+        // Update freelancer UI in header
+        function updateFreelancerUI() {
+            if (!currentFreelancer) return;
+            
+            const initials = currentFreelancer.name.split(' ').map(n => n[0]).join('').toUpperCase();
+            userAvatarElement.textContent = initials;
+            userNameElement.textContent = currentFreelancer.name;
+            activeTasksBadge.textContent = `${currentFreelancer.activeTasks || 0} Active Tasks`;
+            
+            // Format earnings in Kenyan Shillings
+            const earningsFormatted = new Intl.NumberFormat('en-KE', {
+                style: 'currency',
+                currency: 'KES',
+                minimumFractionDigits: 0
+            }).format(currentFreelancer.earnings || 0);
+            
+            // Update stats cards
+            taskStatsElement.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-number">${currentFreelancer.completedTasks || 0}</div>
+                    <div class="stat-label">Total Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${currentFreelancer.activeTasks || 0}</div>
+                    <div class="stat-label">Active Tasks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${earningsFormatted}</div>
+                    <div class="stat-label">Total Earned</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${currentFreelancer.rating || 'N/A'}</div>
+                    <div class="stat-label">Avg Rating</div>
+                </div>
+            `;
+        }
+        
+        // Update profile dropdown UI
+        function updateProfileUI() {
+            if (!currentFreelancer) return;
+            
+            const initials = currentFreelancer.name.split(' ').map(n => n[0]).join('').toUpperCase();
+            profileAvatar.textContent = initials;
+            profileName.textContent = currentFreelancer.name;
+            profileEmail.textContent = currentFreelancer.email || 'moses@example.com';
+            profileSkills.textContent = currentFreelancer.skills || 'Data Entry, Spreadsheets';
+            profileCompleted.textContent = currentFreelancer.completedTasks || 0;
+            
+            // Format earnings in Kenyan Shillings
+            profileEarnings.textContent = new Intl.NumberFormat('en-KE', {
+                style: 'currency',
+                currency: 'KES',
+                minimumFractionDigits: 0
+            }).format(currentFreelancer.earnings || 0);
+            
+            profileRating.textContent = currentFreelancer.rating || 'N/A';
+            profileActive.textContent = currentFreelancer.activeTasks || 0;
+        }
+        
+        // Load tasks - Updated to filter by assigned user
+        async function loadTasks() {
+            try {
+                assignedTasksContainer.innerHTML = `
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                `;
+                
+                inProgressTasksContainer.innerHTML = `
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                `;
+                
+                recentCompletedContainer.innerHTML = `
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                `;
+                
+                // Load tasks assigned to this freelancer
+                const response = await fetch(`${config.scriptUrl}?action=gettasks&freelancerId=${config.freelancerId}`);
+                if (!response.ok) throw new Error('Failed to load tasks');
+                
+                allTasks = await response.json();
+                
+                // Filter tasks by status
+                assignedTasks = allTasks.filter(task => 
+                    task.status.toLowerCase().includes('assigned')
+                );
+                
+                inProgressTasks = allTasks.filter(task => 
+                    task.status.toLowerCase().includes('progress')
+                );
+                
+                completedTasks = allTasks.filter(task => 
+                    task.status.toLowerCase().includes('completed')
+                );
+                
+                renderAssignedTasks();
+                renderInProgressTasks();
+                renderRecentCompletedTasks();
+                renderCompletedTasks();
+                
+                showNotification('Tasks loaded successfully');
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+                handleApiError(error);
+                
+                assignedTasksContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <p>Failed to load tasks. Please try again later.</p>
+                        <button class="btn btn-primary" onclick="loadTasks()">Retry</button>
+                    </div>
+                `;
+            }
+        }
+        
+        // Render assigned tasks
+         function renderAssignedTasks() {
+            if (!assignedTasks || assignedTasks.length === 0) {
+                assignedTasksContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <p>No assigned tasks at the moment. Check back later!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let tasksHTML = '';
+            const taskStatus = JSON.parse(localStorage.getItem('taskStatus'));
+            
+            assignedTasks.forEach((task) => {
+                const dueDate = task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'Not specified';
+                
+                // Format payment in Kenyan Shillings
+                const paymentFormatted = task.payment ? 
+                    new Intl.NumberFormat('en-KE', {
+                        style: 'currency',
+                        currency: 'KES',
+                        minimumFractionDigits: 0
+                    }).format(task.payment) : 'Not specified';
+                
+                // Check if task has been marked in progress locally
+                const isInProgress = taskStatus[task.id] === 'In Progress';
+                const statusClass = isInProgress ? 'status-in-progress' : 'status-assigned';
+                const statusText = isInProgress ? 'In Progress' : 'Assigned';
+                const buttonText = isInProgress ? 'Continue Working' : 'Start Working';
+                
+                tasksHTML += `
+                    <div class="task-card" data-task-id="${task.id}">
+                        <div class="task-header">
+                            <h3 class="task-title">${task.title}</h3>
+                            <div class="task-meta">
+                                <div class="task-info">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>Due: ${dueDate}</span>
+                                </div>
+                                <div class="task-info">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <span>${paymentFormatted}</span>
+                                </div>
+                                <div class="status-badge ${statusClass}">${statusText}</div>
+                            </div>
+                        </div>
+                        <div class="task-description">
+                            ${task.description || 'No description provided.'}
+                        </div>
+                        <div class="task-actions">
+                            <button class="btn btn-primary start-task-btn" data-task-id="${task.id}">
+                                <i class="fas fa-play"></i> ${buttonText}
+                            </button>
+                            <button class="btn btn-secondary mark-in-progress-btn" data-task-id="${task.id}" ${isInProgress ? 'disabled' : ''}>
+                                <i class="fas fa-hourglass-start"></i> Mark In Progress
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            assignedTasksContainer.innerHTML = tasksHTML;
+            
+            // Add event listeners to task buttons
+            document.querySelectorAll('.start-task-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const taskId = this.getAttribute('data-task-id');
+                    const task = allTasks.find(t => t.id === taskId);
+                    if (task) {
+                        openWorkspace(task);
+                    }
+                });
+            });
+            
+            // Add event listeners to mark in progress buttons
+            document.querySelectorAll('.mark-in-progress-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const taskId = this.getAttribute('data-task-id');
+                    markTaskInProgress(taskId);
+                });
+            });
+        }
+
+        // Client-side function to mark task as in progress
+        function markTaskInProgress(taskId) {
+            const taskStatus = JSON.parse(localStorage.getItem('taskStatus'));
+            taskStatus[taskId] = 'In Progress';
+            localStorage.setItem('taskStatus', JSON.stringify(taskStatus));
+            
+            // Update UI immediately
+            const taskCard = document.querySelector(`.task-card[data-task-id="${taskId}"]`);
+            if (taskCard) {
+                const statusBadge = taskCard.querySelector('.status-badge');
+                statusBadge.classList.remove('status-assigned');
+                statusBadge.classList.add('status-in-progress');
+                statusBadge.textContent = 'In Progress';
+                
+                const startButton = taskCard.querySelector('.start-task-btn');
+                startButton.innerHTML = '<i class="fas fa-play"></i> Continue Working';
+                
+                const markButton = taskCard.querySelector('.mark-in-progress-btn');
+                markButton.disabled = true;
+            }
+            
+            showNotification('Task marked as In Progress');
+        }
+        
+        // Render in-progress tasks
+        function renderInProgressTasks() {
+            if (!inProgressTasks || inProgressTasks.length === 0) {
+                inProgressTasksContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <p>No tasks in progress at the moment.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let tasksHTML = '';
+            
+            inProgressTasks.forEach(task => {
+                const dueDate = task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'Not specified';
+                
+                // Format payment in Kenyan Shillings
+                const paymentFormatted = task.payment ? 
+                    new Intl.NumberFormat('en-KE', {
+                        style: 'currency',
+                        currency: 'KES',
+                        minimumFractionDigits: 0
+                    }).format(task.payment) : 'Not specified';
+                
+                tasksHTML += `
+                    <div class="task-card" data-task-id="${task.id}">
+                        <div class="task-header">
+                            <h3 class="task-title">${task.title}</h3>
+                            <div class="task-meta">
+                                <div class="task-info">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>Due: ${dueDate}</span>
+                                </div>
+                                <div class="task-info">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <span>${paymentFormatted}</span>
+                                </div>
+                                <div class="status-badge status-in-progress">${task.status}</div>
+                            </div>
+                        </div>
+                        <div class="task-description">
+                            ${task.description || 'No description provided.'}
+                        </div>
+                        <div class="task-actions">
+                            <button class="btn btn-primary start-task-btn" data-task-id="${task.id}">
+                                <i class="fas fa-play"></i> Continue Working
+                            </button>
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-question-circle"></i> Get Help
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            inProgressTasksContainer.innerHTML = tasksHTML;
+            
+            // Add event listeners to task buttons
+            document.querySelectorAll('.start-task-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const taskId = this.getAttribute('data-task-id');
+                    const task = allTasks.find(t => t.id === taskId);
+                    if (task) {
+                        openWorkspace(task);
+                    }
+                });
+            });
+        }
+        
+        // Render completed tasks for completed section
+        function renderCompletedTasks() {
+            if (!completedTasks || completedTasks.length === 0) {
+                completedTasksContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <p>No completed tasks to display.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let tasksHTML = '';
+            
+            completedTasks.forEach(task => {
+                const dueDate = task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'Not specified';
+                const completedDate = task.completedDate ? new Date(task.completedDate).toLocaleDateString() : 'Not specified';
+                
+                // Format payment in Kenyan Shillings
+                const paymentFormatted = task.payment ? 
+                    new Intl.NumberFormat('en-KE', {
+                        style: 'currency',
+                        currency: 'KES',
+                        minimumFractionDigits: 0
+                    }).format(task.payment) : 'Not specified';
+                
+                tasksHTML += `
+                    <div class="task-card">
+                        <div class="task-header">
+                            <h3 class="task-title">${task.title}</h3>
+                            <div class="task-meta">
+                                <div class="task-info">
+                                    <i class="fas fa-calendar-check"></i>
+                                    <span>Completed: ${completedDate}</span>
+                                </div>
+                                <div class="task-info">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <span>${paymentFormatted}</span>
+                                </div>
+                                <div class="status-badge status-completed">Completed</div>
+                            </div>
+                        </div>
+                        <div class="task-description">
+                            ${task.description || 'No description provided.'}
+                        </div>
+                        <div class="task-actions">
+                            <button class="btn btn-secondary" onclick="openDocument('${task.worksheetUrl}')">
+                                <i class="fas fa-external-link-alt"></i> Open Sheet
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            completedTasksContainer.innerHTML = tasksHTML;
+        }
+        
+        // Render recent completed tasks for tasks section
+        function renderRecentCompletedTasks() {
+            if (!completedTasks || completedTasks.length === 0) {
+                recentCompletedContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <p>No recently completed tasks to display.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Get the 3 most recent completed tasks
+            const recentTasks = [...completedTasks]
+                .sort((a, b) => new Date(b.completedDate) - new Date(a.completedDate))
+                .slice(0, 3);
+            
+            let tasksHTML = '';
+            
+            recentTasks.forEach(task => {
+                const dueDate = task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'Not specified';
+                const completedDate = task.completedDate ? new Date(task.completedDate).toLocaleDateString() : 'Not specified';
+                
+                // Format payment in Kenyan Shillings
+                const paymentFormatted = task.payment ? 
+                    new Intl.NumberFormat('en-KE', {
+                        style: 'currency',
+                        currency: 'KES',
+                        minimumFractionDigits: 0
+                    }).format(task.payment) : 'Not specified';
+                
+                tasksHTML += `
+                    <div class="task-card">
+                        <div class="task-header">
+                            <h3 class="task-title">${task.title}</h3>
+                            <div class="task-meta">
+                                <div class="task-info">
+                                    <i class="fas fa-calendar-check"></i>
+                                    <span>Completed: ${completedDate}</span>
+                                </div>
+                                <div class="task-info">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <span>${paymentFormatted}</span>
+                                </div>
+                                <div class="status-badge status-completed">Completed</div>
+                            </div>
+                        </div>
+                        <div class="task-description">
+                            ${task.description || 'No description provided.'}
+                        </div>
+                        <div class="task-actions">
+                            <button class="btn btn-secondary" onclick="openDocument('${task.worksheetUrl}')">
+                                <i class="fas fa-external-link-alt"></i> Open Sheet
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            recentCompletedContainer.innerHTML = tasksHTML;
+        }
+        
+        // Load performance metrics
+        async function loadPerformanceMetrics() {
+            try {
+                // Simulate loading performance data
+                setTimeout(() => {
+                    // Format earnings in Kenyan Shillings
+                    const earningsFormatted = new Intl.NumberFormat('en-KE', {
+                        style: 'currency',
+                        currency: 'KES',
+                        minimumFractionDigits: 0
+                    }).format(currentFreelancer.earnings || 0);
+                    
+                    const monthlyEarnings = Math.round((currentFreelancer.earnings || 0)/3);
+                    const monthlyEarningsFormatted = new Intl.NumberFormat('en-KE', {
+                        style: 'currency',
+                        currency: 'KES',
+                        minimumFractionDigits: 0
+                    }).format(monthlyEarnings);
+                    
+                    performanceMetrics.innerHTML = `
+                        <div class="metric-card">
+                            <h3 class="metric-title">Completion Rate</h3>
+                            <div class="stat-number">92%</div>
+                            <div class="stat-label">Higher than 85% of peers</div>
+                        </div>
+                        <div class="metric-card">
+                            <h3 class="metric-title">Earnings Overview</h3>
+                            <div class="stat-number">${earningsFormatted}</div>
+                            <div class="stat-label">This month: ${monthlyEarningsFormatted}</div>
+                        </div>
+                        <div class="metric-card">
+                            <h3 class="metric-title">Task Timeline</h3>
+                            <div class="stat-number">2.3 days</div>
+                            <div class="stat-label">Average completion time</div>
+                        </div>
+                        <div class="metric-card">
+                            <h3 class="metric-title">Client Ratings</h3>
+                            <div class="stat-number">${currentFreelancer.rating || 'N/A'}</div>
+                            <div class="stat-label">Based on ${currentFreelancer.completedTasks || 0} tasks</div>
+                        </div>
+                    `;
+                }, 1000);
+            } catch (error) {
+                console.error('Error loading performance metrics:', error);
+                performanceMetrics.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <p>Failed to load performance data. Please try again later.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Load documents
+        async function loadDocuments() {
+            try {
+                documentsList.innerHTML = `
+                    <div class="loading">
+                        <div class="spinner"></div>
+                    </div>
+                `;
+
+                // Get all tasks to extract their worksheet URLs
+                const response = await fetch(`${config.scriptUrl}?action=gettasks&freelancerId=${config.freelancerId}`);
+                if (!response.ok) throw new Error('Failed to load documents');
+                
+                const allTasks = await response.json();
+                const documents = [...config.defaultDocuments];
+                
+                // Extract unique worksheet URLs from tasks
+                allTasks.forEach(task => {
+                    if (task.worksheetUrl && !documents.some(doc => doc.url === task.worksheetUrl)) {
+                        documents.push({
+                            title: task.title || 'Untitled Sheet',
+                            url: task.worksheetUrl,
+                            type: 'Google Sheet',
+                            project: task.project || 'General'
+                        });
+                    }
+                });
+
+                renderDocuments(documents);
+            } catch (error) {
+                console.error('Error loading documents:', error);
+                documentsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <p>Failed to load documents. Please try again later.</p>
+                        <button class="btn btn-primary" onclick="loadDocuments()">Retry</button>
+                    </div>
+                `;
+            }
+        }
+        
+        // Render documents
+        function renderDocuments(documents) {
+            if (!documents || documents.length === 0) {
+                documentsList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-folder-open"></i>
+                        </div>
+                        <p>No documents available yet.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let documentsHTML = '';
+            
+            documents.forEach(doc => {
+                documentsHTML += `
+                    <div class="document-card">
+                        <h3 class="document-title">${doc.title}</h3>
+                        <p><strong>Type:</strong> ${doc.type}</p>
+                        <p><strong>Project:</strong> ${doc.project}</p>
+                        <div class="document-actions">
+                            <button class="btn btn-primary" onclick="openDocument('${doc.url}')">
+                                <i class="fas fa-external-link-alt"></i> Open
+                            </button>
+                            <button class="btn btn-secondary" onclick="copyToClipboard('${doc.url}')">
+                                <i class="fas fa-copy"></i> Copy Link
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            documentsList.innerHTML = documentsHTML;
+        }
+        
+        // Open document in workspace modal
+        function openDocument(url) {
+            if (!url) {
+                showNotification('No URL provided for this document');
+                return;
+            }
+            
+            workspaceTitleElement.textContent = 'Document Viewer';
+            workspaceFrameElement.src = url;
+            workspaceModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Clear previous toolbar
+            workspaceToolbar.innerHTML = '';
+            
+            showNotification(`Opening document: ${url}`);
+        }
+        
+        // Open workspace modal with task
+        function openWorkspace(task) {
+            if (!task || !task.worksheetUrl) {
+                showNotification('No worksheet URL provided for this task');
+                return;
+            }
+            
+            currentTask = task;
+            workspaceTitleElement.textContent = task.title;
+            workspaceFrameElement.src = task.worksheetUrl;
+            workspaceModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Update toolbar with task-specific actions
+            workspaceToolbar.innerHTML = `
+                <button class="btn btn-primary" onclick="updateTaskStatus('${task.id}', 'In Progress')">
+                    <i class="fas fa-check-circle"></i> Mark In Progress
+                </button>
+                <button class="btn btn-primary" onclick="updateTaskStatus('${task.id}', 'Completed')">
+                    <i class="fas fa-check-double"></i> Mark Completed
+                </button>
+                <button class="btn btn-secondary" onclick="copyToClipboard('${task.worksheetUrl}')">
+                    <i class="fas fa-copy"></i> Copy Sheet Link
+                </button>
+            `;
+            
+            showNotification(`Opening workspace for ${task.title}`);
+        }
+        
+        // Close workspace modal
+        function closeWorkspace() {
+            workspaceModal.classList.remove('active');
+            workspaceFrameElement.src = 'about:blank';
+            document.body.style.overflow = 'auto';
+            showNotification('Workspace closed');
+            
+            // Reload tasks to reflect any status changes
+            if (currentTask) {
+                loadTasks();
+                currentTask = null;
+            }
+        }
+        
+        // Toggle fullscreen
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                workspaceFrameElement.requestFullscreen().catch(err => {
+                    showNotification(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+        
+        // Update fullscreen button icon
+        function updateFullscreenButton() {
+            const fullscreenBtn = document.getElementById('fullscreenWorkspace');
+            if (document.fullscreenElement) {
+                fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i>';
+                fullscreenBtn.title = 'Exit Fullscreen';
+            } else {
+                fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
+                fullscreenBtn.title = 'Fullscreen';
+            }
+        }
+        
+        // Update task status
+        async function updateTaskStatus(taskId, newStatus) {
+            try {
+                const payload = {
+                    action: 'updatetaskstatus',
+                    taskId: taskId,
+                    newStatus: newStatus,
+                    freelancerId: config.freelancerId // Include freelancer ID in the update
+                };
+                
+                const response = await fetch(config.scriptUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) throw new Error('Failed to update task status');
+                
+                const data = await response.json();
+                
+                if (!data.success) {
+                    console.error('Failed to update task status:', data.message);
+                    showNotification('Failed to update task status');
+                } else {
+                    showNotification(`Task status updated to ${newStatus}`);
+                    // Close workspace and reload tasks
+                    closeWorkspace();
+                }
+            } catch (error) {
+                console.error('Error updating task status:', error);
+                showNotification('Error updating task status');
+            }
+        }
+        
+        // Copy to clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification('Link copied to clipboard!');
+            }).catch(err => {
+                console.error('Could not copy text: ', err);
+                showNotification('Failed to copy link');
+            });
+        }
+        
+        // Handle API errors
+        function handleApiError(error) {
+            console.error('API Error:', error);
+            
+            let errorMessage = 'An error occurred';
+            if (error.message.includes('Failed to fetch')) {
+                errorMessage = 'Network error - please check your connection';
+            } else if (error.message.includes('Authorization')) {
+                errorMessage = 'Please sign in with your Google account';
+            }
+            
+            showNotification(errorMessage);
+        }
+    </script>
+</body>
+</html>
+
+
+
+

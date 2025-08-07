@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KazInni Space | Jasiri Suite Talent Integration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --dark-blue: #0a192f;
+            --navy: #112240;
+            --light-blue: #64ffda;
+            --highlight: #1e90ff;
+            --eth-teal: #009688;
+            --text-light: #e6f1ff;
+            --text-muted: #8892b0;
+            --form-bg: rgba(17, 34, 64, 0.85);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--dark-blue);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Background Pattern */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+            background-image: 
+                radial-gradient(circle at 25% 25%, var(--light-blue) 0%, transparent 15%),
+                radial-gradient(circle at 75% 75%, var(--highlight) 0%, transparent 15%);
+            background-size: 100px 100px;
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            padding: 5rem 2rem 4rem;
+            background: linear-gradient(to bottom, rgba(10, 25, 47, 1) 0%, rgba(10, 25, 47, 0.9) 100%);
+            border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+        }
+
+        .header-title {
+            font-size: 3.5rem;
+            margin: 0;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--light-blue);
+            position: relative;
+            display: inline-block;
+        }
+
+        .header-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, var(--light-blue), var(--highlight));
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            margin-top: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--light-blue);
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .feature-card {
+            background: rgba(17, 34, 64, 0.7);
+            border-radius: 8px;
+            padding: 2.5rem;
+            border-top: 4px solid var(--light-blue);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+            border-top: 4px solid var(--highlight);
+        }
+
+        .eth-card {
+            border-top-color: var(--eth-teal);
+        }
+
+        .eth-card .card-icon {
+            color: var(--eth-teal);
+        }
+
+        .eth-card:hover {
+            border-top-color: var(--eth-teal);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.8rem;
+            color: var(--light-blue);
+        }
+
+        .card-title {
+            margin: 0 0 1.5rem;
+            color: var(--light-blue);
+            font-weight: 500;
+            font-size: 1.5rem;
+        }
+
+        .card-content {
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        /* Toggle Button */
+        .toggle-form-btn {
+            display: block;
+            width: 250px;
+            margin: 3rem auto;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--light-blue), var(--highlight));
+            border: none;
+            border-radius: 4px;
+            color: var(--dark-blue);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .toggle-form-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.3);
+        }
+
+        .toggle-form-btn i {
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-form-btn.collapsed i {
+            transform: rotate(0deg);
+        }
+
+        .toggle-form-btn.expanded i {
+            transform: rotate(180deg);
+        }
+
+        /* Form Section (initially hidden) */
+        .form-section {
+            background: var(--form-bg);
+            border-radius: 10px;
+            padding: 2.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .form-section.visible {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .form-title {
+            color: var(--light-blue);
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+            position: relative;
+        }
+
+        .form-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 2px;
+            background: var(--light-blue);
+        }
+
+        .form-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.4rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            border-radius: 4px;
+            background-color: rgba(10, 25, 47, 0.6);
+            color: var(--text-light);
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--light-blue);
+            box-shadow: 0 0 0 2px rgba(100, 255, 218, 0.2);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364ffda' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+
+        .form-btn {
+            display: block;
+            width: 100%;
+            padding: 0.9rem;
+            background: linear-gradient(135deg, var(--light-blue), var(--highlight));
+            border: none;
+            border-radius: 4px;
+            color: var(--dark-blue);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .form-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.3);
+        }
+
+        .form-btn:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .form-message {
+            text-align: center;
+            padding: 0.8rem;
+            margin-top: 1.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-message.success {
+            background-color: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+            border: 1px solid rgba(40, 167, 69, 0.5);
+        }
+
+        .form-message.error {
+            background-color: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+            border: 1px solid rgba(220, 53, 69, 0.5);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 3rem 0;
+            background: rgba(10, 25, 47, 0.9);
+            margin-top: 5rem;
+            border-top: 1px solid rgba(100, 255, 218, 0.1);
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Animation for Jasiri Suite integration */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(100, 255, 218, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(100, 255, 218, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(100, 255, 218, 0); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @media (max-width: 768px) {
+            .header-title {
+                font-size: 2.5rem;
+            }
+            
+            .tagline {
+                font-size: 1.2rem;
+                padding: 0 1rem;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-section {
+                padding: 2rem;
+                max-width: 90%;
+            }
+            
+            .form-title {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Pattern -->
+    <div class="bg-pattern"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <h1 class="header-title">KazInni Space</h1>
+        <p class="tagline">Integrated Talent Hub for the Jasiri Suite Enterprise System</p>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h2 class="section-title">Platform Features</h2>
+        
+        <div class="cards-grid">
+            <!-- Card 1 -->
+            <div class="feature-card">
+                <div class="card-icon"><i class="fas fa-project-diagram"></i></div>
+                <h3 class="card-title">Jasiri Suite Integrated Projects</h3>
+                <div class="card-content">
+                    <p>Access real-time project opportunities generated directly from Jasiri Suite system needs across EMH, ERH, and EZH components. Projects are automatically matched to your skills profile.</p>
+                </div>
+            </div>
+            
+            <!-- Card 2 -->
+            <div class="feature-card eth-card">
+                <div class="card-icon"><i class="fas fa-users"></i></div>
+                <h3 class="card-title">ETH Talent Matching</h3>
+                <div class="card-content">
+                    <p>Our integration with Enterprise Talent Hub (ETH) ensures optimal matching between your capabilities and Jasiri Suite operational requirements across all business units.</p>
+                </div>
+            </div>
+            
+            <!-- Card 3 -->
+            <div class="feature-card">
+                <div class="card-icon"><i class="fas fa-network-wired"></i></div>
+                <h3 class="card-title">Cross-System Collaboration</h3>
+                <div class="card-content">
+                    <p>Work on projects that bridge multiple Jasiri Suite components, contributing to inventory management (ERH), regional strategies (EZH), and operational improvements (EMH).</p>
+                </div>
+            </div>
+            
+            <!-- Card 4 -->
+            <div class="feature-card">
+                <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                <h3 class="card-title">Performance Integration</h3>
+                <div class="card-content">
+                    <p>Your contributions automatically update both KazInni and Jasiri Suite systems, creating a comprehensive record of your enterprise-wide impact and skill development.</p>
+                </div>
+            </div>
+            
+            <!-- Card 5 -->
+            <div class="feature-card">
+                <div class="card-icon"><i class="fas fa-bullhorn"></i></div>
+                <h3 class="card-title">System-Generated Alerts</h3>
+                <div class="card-content">
+                    <p>Receive notifications when Jasiri Suite components identify needs matching your profile, ensuring you never miss relevant opportunities.</p>
+                </div>
+            </div>
+            
+            <!-- Card 6 -->
+            <div class="feature-card">
+                <div class="card-icon"><i class="fas fa-sync-alt"></i></div>
+                <h3 class="card-title">Real-Time Data Sync</h3>
+                <div class="card-content">
+                    <p>All project data stays synchronized between KazInni and Jasiri Suite, ensuring accurate tracking of time commitments, deliverables, and performance metrics.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- How It Works Section -->
+        <h2 class="section-title">Jasiri Suite Integration Workflow</h2>
+        
+        <div class="cards-grid">
+            <div class="feature-card">
+                <div class="card-icon"><i class="fas fa-search"></i></div>
+                <h3 class="card-title">1. Opportunity Identification</h3>
+                <div class="card-content">
+                    <p>Jasiri Suite components automatically detect operational gaps (inventory needs in ERH, regional projects in EZH, staffing requirements in EMH) that can be filled by KazInni talent.</p>
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="card-icon"><i class="fas fa-people-arrows"></i></div>
+                <h3 class="card-title">2. Intelligent Matching</h3>
+                <div class="card-content">
+                    <p>The ETH component analyzes both the Jasiri Suite requirements and KazInni talent profiles to create optimal matches based on skills, availability, and project criticality.</p>
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="card-icon"><i class="fas fa-tasks"></i></div>
+                <h3 class="card-title">3. Project Execution</h3>
+                <div class="card-content">
+                    <p>Freelancers receive detailed briefs with all necessary Jasiri Suite system access. Work is tracked in both platforms with real-time progress updates.</p>
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="card-icon"><i class="fas fa-database"></i></div>
+                <h3 class="card-title">4. Data Integration</h3>
+                <div class="card-content">
+                    <p>Completed work automatically updates relevant Jasiri Suite components (inventory levels in ERH, sales data in EMH) while enriching your KazInni profile.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Toggle Button for Form -->
+        <button id="toggleFormBtn" class="toggle-form-btn collapsed">
+            Join KazInni Space <i class="fas fa-chevron-down"></i>
+        </button>
+        
+        <!-- Compact Registration Form Section -->
+        <div id="registrationFormSection" class="form-section">
+            <h2 class="form-title">Join KazInni Space</h2>
+            <form id="registrationForm" class="form-container">
+                <div class="form-group">
+                    <label for="fullName" class="form-label">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" class="form-control" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="employeeId" class="form-label">Employee ID</label>
+                    <input type="text" id="employeeId" name="employeeId" class="form-control" placeholder="Enter your employee ID" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email" class="form-label">Work Email</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="your.name@teleioosavour.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="department" class="form-label">Department</label>
+                    <select id="department" name="department" class="form-control form-select" required>
+                        <option value="" disabled selected>Select your department</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Sales">Sales</option>
+                        <option value="HR">Human Resources</option>
+                        <option value="Finance">Finance</option>
+                        <option value="Operations">Operations</option>
+                        <option value="IT">Information Technology</option>
+                        <option value="R&D">Research & Development</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="jobTitle" class="form-label">Job Title</label>
+                    <input type="text" id="jobTitle" name="jobTitle" class="form-control" placeholder="Enter your job title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="location" class="form-label">Location</label>
+                    <select id="location" name="location" class="form-control form-select" required>
+                        <option value="" disabled selected>Select your location</option>
+                        <option value="Nairobi">Nairobi</option>
+                        <option value="Mombasa">Mombasa</option>
+                        <option value="Nyeri">Nyeri</option>
+                        <option value="Nakuru">Nakuru</option>
+                        <option value="Embu">Embu</option>
+                        <option value="Thika">Thika</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="skills" class="form-label">Primary Skills</label>
+                    <input type="text" id="skills" name="skills" class="form-control" placeholder="List your top 3 skills" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="availability" class="form-label">Weekly Availability</label>
+                    <select id="availability" name="availability" class="form-control form-select" required>
+                        <option value="" disabled selected>Hours per week</option>
+                        <option value="5-10">5-10 hours</option>
+                        <option value="10-15">10-15 hours</option>
+                        <option value="15-20">15-20 hours</option>
+                        <option value="20+">20+ hours</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="form-btn" id="submitBtn">Register Now</button>
+                </div>
+                
+                <div id="formMessage" class="form-message" style="display: none;"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">KazInni Space is the official talent integration platform of the Jasiri Suite Enterprise System, connecting skilled professionals with operational needs across all business components.</p>
+            <p class="footer-text" style="margin-top: 2rem;">© <span id="currentYear"></span> KazInni Space. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Display current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // Toggle form visibility
+        const toggleBtn = document.getElementById('toggleFormBtn');
+        const formSection = document.getElementById('registrationFormSection');
+        
+        toggleBtn.addEventListener('click', function() {
+            this.classList.toggle('expanded');
+            this.classList.toggle('collapsed');
+            formSection.classList.toggle('visible');
+        });
+        
+        // Scroll animations
+        const animateOnScroll = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.feature-card').forEach(card => {
+            animateOnScroll.observe(card);
+        });
+        
+        // Form submission handling
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const formMessage = document.getElementById('formMessage');
+            
+            // Disable submit button during processing
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing...';
+            formMessage.style.display = 'none';
+            
+            // Collect form data
+            const formData = new FormData();
+            formData.append('fullName', document.getElementById('fullName').value);
+            formData.append('employeeId', document.getElementById('employeeId').value);
+            formData.append('email', document.getElementById('email').value);
+            formData.append('department', document.getElementById('department').value);
+            formData.append('jobTitle', document.getElementById('jobTitle').value);
+            formData.append('location', document.getElementById('location').value);
+            formData.append('skills', document.getElementById('skills').value);
+            formData.append('availability', document.getElementById('availability').value);
+            
+            // Form validation
+            if (!formData.get('fullName') || !formData.get('employeeId') || !formData.get('email') || 
+                !formData.get('department') || !formData.get('jobTitle') || !formData.get('location') || 
+                !formData.get('skills') || !formData.get('availability')) {
+                
+                formMessage.textContent = 'Please fill in all required fields.';
+                formMessage.className = 'form-message error';
+                formMessage.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Register Now';
+                return;
+            }
+            
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(formData.get('email'))) {
+                formMessage.textContent = 'Please enter a valid email address.';
+                formMessage.className = 'form-message error';
+                formMessage.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Register Now';
+                return;
+            }
+            
+            // Your Google Apps Script URL
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbzIrcd9FPG1xW6d42-kTO9TQzvy4P5WuyppiPdBPln7omqQQlVkK1i3KLpBoGxsuDvN/exec';
+            
+            // Send data to Google Sheet
+            fetch(scriptURL, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                formMessage.innerHTML = '<i class="fas fa-check-circle"></i> Registration successful! Welcome to KazInni Space.';
+                formMessage.className = 'form-message success';
+                formMessage.style.display = 'block';
+                document.getElementById('registrationForm').reset();
+            })
+            .catch(error => {
+                formMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error: ' + error.message;
+                formMessage.className = 'form-message error';
+                formMessage.style.display = 'block';
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Register Now';
+            });
+        });
+    </script>
+</body>
+</html>
