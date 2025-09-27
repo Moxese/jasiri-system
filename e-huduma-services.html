@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Huduma Services</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #072033;
+            --dark-blue: #05121f;
+            --light-blue: #0d3a5c;
+            --accent-blue: #0a4d7c;
+            --gradient-start: #072033;
+            --gradient-end: #05121f;
+            --text-dark: #202124;
+            --text-light: #5f6368;
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --border-light: #dadce0;
+            --success: #34a853;
+            --warning: #f9ab00;
+            --error: #ea4335;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 10px;
+        }
+
+        .tech-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 2px, transparent 2px),
+                radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px, 30px 30px;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        .app-card {
+            background: var(--bg-white);
+            border-radius: 16px;
+            box-shadow: var(--shadow-hover);
+            overflow: hidden;
+            width: 100%;
+            margin: 0 auto;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            overflow: hidden;
+            background: rgba(4, 2, 2, 0.274);
+            backdrop-filter: blur(10px);
+            flex-shrink: 0;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .page-title {
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .services-content {
+            padding: 25px 20px;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--bg-light);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .service-card {
+            background: var(--bg-white);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary-blue);
+        }
+
+        .service-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--light-blue) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            color: white;
+            font-size: 1.3em;
+        }
+
+        .service-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .service-description {
+            color: var(--text-light);
+            font-size: 0.85em;
+            line-height: 1.4;
+            margin-bottom: 12px;
+            flex-grow: 1;
+        }
+
+        .service-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 500;
+            margin-top: auto;
+        }
+
+        .status-active {
+            background: #e6f4ea;
+            color: var(--success);
+        }
+
+        .status-coming {
+            background: #fef7e0;
+            color: var(--warning);
+        }
+
+        .back-to-dashboard {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .back-to-dashboard a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            padding: 10px 20px;
+            border: 1px solid var(--primary-blue);
+            border-radius: 8px;
+        }
+
+        .back-to-dashboard a:hover {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* Small mobile screens (320px - 480px) */
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+                font-size: 14px;
+            }
+            
+            .page-header {
+                padding: 15px;
+            }
+            
+            .logo {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .page-title {
+                font-size: 1.3em;
+            }
+            
+            .services-content {
+                padding: 20px 15px;
+            }
+            
+            .section-title {
+                font-size: 1.3em;
+            }
+            
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            
+            .service-card {
+                padding: 12px;
+            }
+            
+            .service-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2em;
+                margin-bottom: 10px;
+            }
+            
+            .service-name {
+                font-size: 1em;
+            }
+            
+            .service-description {
+                font-size: 0.8em;
+            }
+        }
+
+        /* Very small screens - adjust to 1 column if needed */
+        @media (max-width: 350px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Tablet screens (768px and up) */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 700px;
+                padding: 20px 0;
+            }
+            
+            .services-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+            }
+            
+            .service-card {
+                padding: 20px;
+            }
+            
+            .service-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5em;
+            }
+        }
+
+        /* Large screens (1024px and up) */
+        @media (min-width: 1024px) {
+            .container {
+                max-width: 1000px;
+            }
+            
+            .services-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="tech-pattern"></div>
+    
+    <div class="container">
+        <div class="app-card">
+            <div class="page-header">
+                <div class="logo">
+                    <img src="https://i.postimg.cc/fb8DqVyv/earth-globe-with-a-house-in-a-placeholder-on-africa-1.png" alt="E-Huduma Logo">
+                </div>
+                <h1 class="page-title">E-Huduma Services</h1>
+            </div>
+
+            <div class="services-content">
+                <!-- Household Services -->
+                <div class="service-category">
+                    <h2 class="section-title">
+                        <i class="fas fa-home"></i>
+                        Household Services
+                    </h2>
+                    <div class="services-grid">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-tint"></i>
+                            </div>
+                            <h3 class="service-name">Water Bill Payments</h3>
+                            <p class="service-description">Pay your water utility bills securely through your E-Huduma account.</p>
+                            <span class="service-status status-active">Active</span>
+                        </div>
+                        
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <h3 class="service-name">Electricity Services</h3>
+                            <p class="service-description">Manage electricity accounts and pay bills through our platform.</p>
+                            <span class="service-status status-active">Active</span>
+                        </div>
+                        
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-trash"></i>
+                            </div>
+                            <h3 class="service-name">Waste Management</h3>
+                            <p class="service-description">Schedule waste collection services and manage your account.</p>
+                            <span class="service-status status-active">Active</span>
+                        </div>
+                        
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-wifi"></i>
+                            </div>
+                            <h3 class="service-name">Internet & Telecom</h3>
+                            <p class="service-description">Manage internet and telecom services with easy payment options.</p>
+                            <span class="service-status status-coming">Coming Soon</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transport and Logistics -->
+                <div class="service-category">
+                    <h2 class="section-title">
+                        <i class="fas fa-truck"></i>
+                        Transport and Logistics
+                    </h2>
+                    <div class="services-grid">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-bus"></i>
+                            </div>
+                            <h3 class="service-name">Public Transport Pass</h3>
+                            <p class="service-description">Digital public transport passes for buses and trains.</p>
+                            <span class="service-status status-active">Active</span>
+                        </div>
+                        
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-car"></i>
+                            </div>
+                            <h3 class="service-name">Vehicle Registration</h3>
+                            <p class="service-description">Renew vehicle registration and pay road taxes online.</p>
+                            <span class="service-status status-active">Active</span>
+                        </div>
+                        
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-shipping-fast"></i>
+                            </div>
+                            <h3 class="service-name">Parcel Delivery</h3>
+                            <p class="service-description">Schedule and track parcel deliveries with logistics providers.</p>
+                            <span class="service-status status-coming">Coming Soon</span>
+                        </div>
+                        
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-map-marked-alt"></i>
+                            </div>
+                            <h3 class="service-name">Route Planning</h3>
+                            <p class="service-description">Get optimized routes with real-time traffic information.</p>
+                            <span class="service-status status-coming">Coming Soon</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Financial Services -->
+                <div class="service-category">
+                    <h2 class="section-title">
+                        <i class="fas fa-piggy-bank"></i>
+                        Financial Services
+                    </h2>
+                    <div class="services-grid">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-money-check-alt"></i>
+                            </div>
+                            <h3 class="service-name">Bill Payments</h3>
+                            <p class="service-description">Pay all your bills in one place with secure processing.</p>
+                            <span class="service-status status-active">Active</span>
+                        </div>
+                        
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-university"></i>
+                            </div>
+                            <h3 class="service-name">Bank Integration</h3>
+                            <p class="service-description">Connect bank accounts for financial management.</p>
+                            <span class="service-status status-active">Active</span>
+                        </div>
+                        
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h3 class="service-name">Financial Planning</h3>
+                            <p class="service-description">Budgeting tools to help manage your finances.</p>
+                            <span class="service-status status-coming">Coming Soon</span>
+                        </div>
+                        
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-hand-holding-usd"></i>
+                            </div>
+                            <h3 class="service-name">Loan Services</h3>
+                            <p class="service-description">Access to vetted loan providers with simplified applications.</p>
+                            <span class="service-status status-coming">Coming Soon</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Government Services -->
+                <div class="service-category">
+                    <h2 class="section-title">
+                        <i class="fas fa-landmark"></i>
+                        Government Services
+                    </h2>
+                    <div class="services-grid">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-id-card"></i>
+                            </div>
+                            <h3 class="service-name">ID Services</h3>
+                            <p class="service-description">Apply for and manage identification documents.</p>
+                            <span class="service-status status-active">Active</span>
+                        </div>
+                        
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-file-contract"></i>
+                            </div>
+                            <h3 class="service-name">License Applications</h3>
+                            <p class="service-description">Apply for business licenses and permits online.</p>
+                            <span class="service-status status-active">Active</span>
+                        </div>
+                        
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-balance-scale"></i>
+                            </div>
+                            <h3 class="service-name">Legal Services</h3>
+                            <p class="service-description">Access to legal documentation services.</p>
+                            <span class="service-status status-coming">Coming Soon</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Healthcare Services -->
+                <div class="service-category">
+                    <h2 class="section-title">
+                        <i class="fas fa-heartbeat"></i>
+                        Healthcare Services
+                    </h2>
+                    <div class="services-grid">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-hospital"></i>
+                            </div>
+                            <h3 class="service-name">Medical Records</h3>
+                            <p class="service-description">Securely store and access your medical records.</p>
+                            <span class="service-status status-active">Active</span>
+                        </div>
+                        
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-pills"></i>
+                            </div>
+                            <h3 class="service-name">Pharmacy Services</h3>
+                            <p class="service-description">Order prescription refills with reminder notifications.</p>
+                            <span class="service-status status-coming">Coming Soon</span>
+                        </div>
+                        
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <h3 class="service-name">Doctor Appointments</h3>
+                            <p class="service-description">Book appointments with healthcare professionals.</p>
+                            <span class="service-status status-coming">Coming Soon</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="back-to-dashboard">
+                    <a href="dashboard.html">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple script for any interactive elements if needed
+        document.addEventListener('DOMContentLoaded', function() {
+            // Service cards could have click events in the future
+            const serviceCards = document.querySelectorAll('.service-card');
+            
+            serviceCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Add functionality here if services become clickable
+                    console.log('Service clicked: ', this.querySelector('.service-name').textContent);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
